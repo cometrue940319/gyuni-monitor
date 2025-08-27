@@ -282,7 +282,7 @@
 
             <div class="success-message" id="successMessage">
                 <i class="fas fa-check-circle"></i>
-                <span id="successText">로그인 성공! 관리자 페이지로 이동합니다...</span>
+                <span id="successText">로그인 성공! 관리자 대시보드로 이동합니다...</span>
             </div>
 
             <div class="error-message" id="errorMessage">
@@ -379,7 +379,7 @@
                 
             } else {
                 console.log('비밀번호 불일치!');
-                showError('비밀번호가 올바르지 않습니다. (정답: 1025)');
+                showError('비밀번호가 올바르지 않습니다.');
                 document.getElementById('password').value = '';
                 document.getElementById('password').focus();
             }
@@ -409,4 +409,3 @@
     </script>
 </body>
 </html>
-
