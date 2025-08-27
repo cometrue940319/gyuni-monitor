@@ -303,15 +303,15 @@
             margin-right: 5px;
         }
         
-        /* 한줄인사 특별 설정 */
+        /* 한줄인사 특별 설정 - 바로 밑에 나타나도록 */
         .special-settings {
-            grid-column: 1 / -1;
             background: linear-gradient(135deg, #fef7cd, #fef3c7);
             border: 2px solid #f59e0b;
             border-radius: 15px;
             padding: 20px;
             margin-top: 20px;
             display: none;
+            grid-column: 1 / -1; /* 전체 너비 차지 */
         }
         
         .special-settings.show {
@@ -414,6 +414,35 @@
         .checkbox-wrapper span {
             color: #92400e;
             font-size: 14px;
+        }
+        
+        /* 설정 접기 기능 */
+        .settings-toggle {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        
+        .toggle-icon {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .settings-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .settings-content.expanded {
+            max-height: 1000px;
         }
         
         .controls {
@@ -708,6 +737,36 @@
                     <div class="special-badge">특별설정</div>
                 </label>
 
+                <!-- 한줄인사 특별 설정 - 바로 여기에 위치 -->
+                <div id="onelineSpecialSettings" class="special-settings">
+                    <h3>
+                        <i class="fas fa-cog"></i>
+                        한줄인사 특별 설정
+                    </h3>
+                    <div class="special-grid">
+                        <div class="user-list-section">
+                            <div class="user-list-title">모니터링할 사용자</div>
+                            <div id="userList">
+                                <div class="user-input-group">
+                                    <input type="text" class="user-input" placeholder="조형균" value="조형균">
+                                    <button class="remove-user-btn" onclick="removeUser(this)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="add-user-btn" onclick="addUser()">
+                                <i class="fas fa-plus"></i> 사용자 추가
+                            </button>
+                        </div>
+                        <div class="reply-settings">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="onelineMyReplies">
+                                <span>내 글에 댓글 알림</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 미소들의 수다 -->
                 <label class="board-card">
                     <input type="checkbox" class="board-checkbox sr-only" data-board="ab-chat" data-name="미소들의 수다">
@@ -782,36 +841,6 @@
                     </div>
                 </label>
 
-                <!-- 한줄인사 특별 설정 -->
-                <div id="onelineSpecialSettings" class="special-settings">
-                    <h3>
-                        <i class="fas fa-cog"></i>
-                        한줄인사 특별 설정
-                    </h3>
-                    <div class="special-grid">
-                        <div class="user-list-section">
-                            <div class="user-list-title">모니터링할 사용자</div>
-                            <div id="userList">
-                                <div class="user-input-group">
-                                    <input type="text" class="user-input" placeholder="조형균" value="조형균">
-                                    <button class="remove-user-btn" onclick="removeUser(this)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <button class="add-user-btn" onclick="addUser()">
-                                <i class="fas fa-plus"></i> 사용자 추가
-                            </button>
-                        </div>
-                        <div class="reply-settings">
-                            <label class="checkbox-wrapper">
-                                <input type="checkbox" id="onelineMyReplies">
-                                <span>내 글에 댓글 알림</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- 쪽지함 -->
                 <label id="messageBoard" class="board-card" style="border: 2px solid #60a5fa;">
                     <input type="checkbox" class="board-checkbox sr-only" data-board="ab-msg_recv" data-name="쪽지함">
@@ -830,70 +859,75 @@
             </div>
         </div>
 
-        <!-- 설정 -->
+        <!-- 설정 (접을 수 있음) -->
         <div class="card">
-            <h2 class="section-title">
-                <i class="fas fa-cog"></i>
-                설정
-            </h2>
+            <button class="settings-toggle" id="settingsToggle">
+                <h2 class="section-title">
+                    <i class="fas fa-cog"></i>
+                    설정
+                </h2>
+                <i class="fas fa-chevron-down toggle-icon" id="toggleIcon"></i>
+            </button>
             
-            <div class="settings-grid">
-                <!-- 댓글 알림 설정 -->
-                <div class="setting-card">
-                    <div class="setting-title">
-                        <i class="fas fa-comment-dots" style="color: #3b82f6;"></i>
-                        댓글 알림
+            <div class="settings-content" id="settingsContent">
+                <div class="settings-grid">
+                    <!-- 댓글 알림 설정 -->
+                    <div class="setting-card">
+                        <div class="setting-title">
+                            <i class="fas fa-comment-dots" style="color: #3b82f6;"></i>
+                            댓글 알림
+                        </div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="commentNotifications" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="commentNotifications" checked>
-                        새 댓글 알림 받기
-                    </label>
+
+                    <!-- 체크 간격 -->
+                    <div class="setting-card">
+                        <div class="setting-title">
+                            <i class="fas fa-clock" style="color: #10b981;"></i>
+                            체크 간격
+                        </div>
+                        <select id="checkInterval" class="form-control">
+                            <option value="0">수동으로만 체크</option>
+                            <option value="1">1분마다 (테스트용)</option>
+                            <option value="5" selected>5분마다</option>
+                            <option value="10">10분마다</option>
+                            <option value="30">30분마다</option>
+                            <option value="60">1시간마다</option>
+                        </select>
+                    </div>
+
+                    <!-- 알림 설정 -->
+                    <div class="setting-card">
+                        <div class="setting-title">
+                            <i class="fas fa-bell" style="color: #8b5cf6;"></i>
+                            알림 옵션
+                        </div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="soundAlert" checked>
+                            소리 알림
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="desktopAlert" checked>
+                            데스크톱 알림
+                        </label>
+                    </div>
                 </div>
 
-                <!-- 체크 간격 -->
-                <div class="setting-card">
-                    <div class="setting-title">
-                        <i class="fas fa-clock" style="color: #10b981;"></i>
-                        체크 간격
-                    </div>
-                    <select id="checkInterval" class="form-control">
-                        <option value="0">수동으로만 체크</option>
-                        <option value="1">1분마다 (테스트용)</option>
-                        <option value="5" selected>5분마다</option>
-                        <option value="10">10분마다</option>
-                        <option value="30">30분마다</option>
-                        <option value="60">1시간마다</option>
-                    </select>
+                <!-- 컨트롤 버튼 -->
+                <div class="controls">
+                    <button id="startMonitoringBtn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> 모니터링 시작
+                    </button>
+                    <button id="checkAllBtn" class="btn btn-success">
+                        <i class="fas fa-sync"></i> 즉시 체크
+                    </button>
+                    <button id="testNotificationBtn" class="btn btn-warning">
+                        <i class="fas fa-bell"></i> 알림 테스트
+                    </button>
                 </div>
-
-                <!-- 알림 설정 -->
-                <div class="setting-card">
-                    <div class="setting-title">
-                        <i class="fas fa-bell" style="color: #8b5cf6;"></i>
-                        알림 옵션
-                    </div>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="soundAlert" checked>
-                        소리 알림
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="desktopAlert" checked>
-                        데스크톱 알림
-                    </label>
-                </div>
-            </div>
-
-            <!-- 컨트롤 버튼 -->
-            <div class="controls">
-                <button id="startMonitoringBtn" class="btn btn-primary">
-                    <i class="fas fa-play"></i> 모니터링 시작
-                </button>
-                <button id="checkAllBtn" class="btn btn-success">
-                    <i class="fas fa-sync"></i> 즉시 체크
-                </button>
-                <button id="testNotificationBtn" class="btn btn-warning">
-                    <i class="fas fa-bell"></i> 알림 테스트
-                </button>
             </div>
         </div>
 
@@ -971,8 +1005,23 @@
             button.parentElement.remove();
         }
 
-        // 보드 카드 선택 이벤트
+        // 페이지 로드 이벤트
         document.addEventListener('DOMContentLoaded', () => {
+            // 설정 토글 기능
+            const settingsToggle = document.getElementById('settingsToggle');
+            const settingsContent = document.getElementById('settingsContent');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            settingsToggle.addEventListener('click', () => {
+                if (settingsContent.classList.contains('expanded')) {
+                    settingsContent.classList.remove('expanded');
+                    toggleIcon.style.transform = 'rotate(0deg)';
+                } else {
+                    settingsContent.classList.add('expanded');
+                    toggleIcon.style.transform = 'rotate(180deg)';
+                }
+            });
+
             // 게시판 선택 이벤트
             document.querySelectorAll('.board-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', (e) => {
