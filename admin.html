@@ -176,7 +176,7 @@
         }
         
         .activity-log {
-            max-height: 300px;
+            max-height: 100vh;
             overflow-y: auto;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
@@ -368,7 +368,11 @@
             </div>
 
             <div class="control-buttons">
-                <button class="btn btn-primary" onclick="saveSettings()">
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    메인으로 가기
+                </a>
+                <button class="btn btn-secondary" onclick="saveSettings()">
                     <i class="fas fa-save"></i>
                     설정 저장
                 </button>
