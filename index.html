@@ -1,309 +1,844 @@
-## 📄 현재 사이트와 동일한 index.html 코드
-
-```html
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>형균이네 정미소 모니터링</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <style>
-        body { 
-            font-family: 'Pretendard', sans-serif; 
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
-        }
-        .board-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .board-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
-        }
-        .board-card.selected {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-        }
-    </style>
-</head>
-<body class="min-h-screen">
-    <div class="container mx-auto px-6 py-8">
-        <!-- 헤더 -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent mb-3" style="font-family: 'Gamja Flower', cursive;">
-                        형균이네 정미소 모니터링
-                    </h1>
-                    <p class="text-gray-600 text-lg">실시간으로 커뮤니티 활동을 모니터링하세요</p>
-                </div>
-                
-                <div class="flex gap-3">
-                    <a href="user-login.html" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:shadow-lg">
-                        <i class="fas fa-user mr-2"></i>로그인
-                    </a>
-                    <a href="admin-login.html" class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:shadow-lg">
-                        <i class="fas fa-shield-alt mr-2"></i>관리자
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- 게시판 선택 섹션 -->
-        <div class="glass-card rounded-3xl p-8 mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <i class="fas fa-clipboard-list text-blue-500 mr-3"></i>
-                모니터링할 게시판 선택
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                <!-- 공지사항 -->
-                <div class="board-card bg-gradient-to-br from-red-50 to-pink-50 rounded-2xl p-6 border border-red-200" onclick="toggleBoard(this)">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-bullhorn text-red-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">공지사항</h3>
-                                <p class="text-sm text-gray-600">중요한 공지사항</p>
-                            </div>
-                        </div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="board-checkbox form-checkbox h-5 w-5 text-red-500 rounded" 
-                                   data-board="ab-notice" data-name="공지사항">
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 작업일지 -->
-                <div class="board-card bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200" onclick="toggleBoard(this)">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-clipboard-check text-blue-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">작업일지</h3>
-                                <p class="text-sm text-gray-600">형균님의 작업 현황</p>
-                            </div>
-                        </div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="board-checkbox form-checkbox h-5 w-5 text-blue-500 rounded" 
-                                   data-board="ab-worklog" data-name="작업일지">
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 형균이네 수다 -->
-                <div class="board-card bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-6 border border-yellow-200" onclick="toggleBoard(this)">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-star text-yellow-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">형균이네 수다</h3>
-                                <p class="text-sm text-gray-600">형균님과의 소통</p>
-                            </div>
-                        </div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="board-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded" 
-                                   data-board="ab-hyungkyun" data-name="형균이네 수다">
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 한줄인사 -->
-                <div class="board-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200" onclick="toggleBoard(this)">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-hand-wave text-green-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">한줄인사</h3>
-                                <p class="text-sm text-gray-600">회원들의 인사말</p>
-                            </div>
-                        </div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="board-checkbox form-checkbox h-5 w-5 text-green-500 rounded" 
-                                   data-board="ab-1040" data-name="한줄인사">
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 미소들의 수다 -->
-                <div class="board-card bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-6 border border-purple-200" onclick="toggleBoard(this)">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-comments text-purple-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">미소들의 수다</h3>
-                                <p class="text-sm text-gray-600">자유로운 대화</p>
-                            </div>
-                        </div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="board-checkbox form-checkbox h-5 w-5 text-purple-500 rounded" 
-                                   data-board="ab-chat" data-name="미소들의 수다">
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 쪽지함 -->
-                <div class="board-card bg-gradient-to-br from-pink-50 to-rose-50 rounded-2xl p-6 border border-pink-200" onclick="toggleBoard(this)">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center">
-                            <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-envelope text-pink-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg text-gray-800">쪽지함</h3>
-                                <p class="text-sm text-gray-600">개인 메시지</p>
-                            </div>
-                        </div>
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="board-checkbox form-checkbox h-5 w-5 text-pink-500 rounded" 
-                                   data-board="ab-msg_recv" data-name="쪽지함">
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 컨트롤 버튼들 -->
-        <div class="flex flex-wrap justify-center gap-4 mb-8">
-            <button id="startMonitoringBtn" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                <i class="fas fa-play mr-3"></i>모니터링 시작
-            </button>
-            <button id="checkAllBtn" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                <i class="fas fa-sync mr-3"></i>전체 체크
-            </button>
-            <button id="testNotificationBtn" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                <i class="fas fa-bell mr-3"></i>알림 테스트
-            </button>
-        </div>
-
-        <!-- 현재 모니터링 목록 -->
-        <div class="glass-card rounded-3xl p-8 mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <i class="fas fa-radar-dish text-green-500 mr-3"></i>
-                현재 모니터링
-            </h2>
-            
-            <div id="monitorList" class="space-y-4">
-                <!-- 모니터링 항목들이 여기에 동적으로 추가됩니다 -->
-            </div>
-            
-            <!-- 빈 상태 -->
-            <div id="emptyState" class="text-center py-12">
-                <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-                    <i class="fas fa-search text-4xl text-gray-400"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-600 mb-2">아직 모니터링 중인 게시판이 없습니다</h3>
-                <p class="text-gray-500 mb-6">위에서 게시판을 선택하고 모니터링을 시작해보세요!</p>
-            </div>
-        </div>
-
-        <!-- 알림 히스토리 -->
-        <div class="glass-card rounded-3xl p-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 flex items-center">
-                    <i class="fas fa-history text-amber-500 mr-3"></i>
-                    알림 히스토리
-                </h2>
-                <button id="clearHistoryBtn" class="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:shadow-lg">
-                    <i class="fas fa-trash mr-2"></i>히스토리 삭제
-                </button>
-            </div>
-            
-            <div id="historyList" class="space-y-3 max-h-96 overflow-y-auto">
-                <!-- 히스토리 항목들이 여기에 동적으로 추가됩니다 -->
-            </div>
-            
-            <!-- 빈 히스토리 상태 -->
-            <div id="emptyHistory" class="text-center py-8">
-                <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                    <i class="fas fa-bell-slash text-2xl text-gray-400"></i>
-                </div>
-                <h3 class="text-lg font-bold text-gray-600 mb-2">아직 알림이 없습니다</h3>
-                <p class="text-gray-500">모니터링을 시작하면 변화가 감지될 때마다 알림이 여기에 표시됩니다.</p>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/main.js"></script>
-    <script>
-        // 게시판 카드 토글 함수
-        function toggleBoard(card) {
-            const checkbox = card.querySelector('.board-checkbox');
-            checkbox.checked = !checkbox.checked;
-            
-            if (checkbox.checked) {
-                card.classList.add('selected');
-            } else {
-                card.classList.remove('selected');
-            }
-            
-            updateSelectedBoards();
-        }
-        
-        function updateSelectedBoards() {
-            const selectedBoards = [];
-            document.querySelectorAll('.board-checkbox:checked').forEach(checkbox => {
-                selectedBoards.push({
-                    path: checkbox.dataset.board,
-                    name: checkbox.dataset.name
-                });
-            });
-            console.log('선택된 게시판:', selectedBoards);
-        }
-        
-        // 체크박스 클릭 시 이벤트 버블링 방지
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('board-checkbox')) {
-                e.stopPropagation();
-            }
-        });
-
-        // 기본 기능들
-        document.getElementById('startMonitoringBtn')?.addEventListener('click', function() {
-            alert('모니터링 기능은 js/main.js 파일이 로드된 후 작동합니다!');
-        });
-
-        document.getElementById('checkAllBtn')?.addEventListener('click', function() {
-            alert('전체 체크 기능입니다!');
-        });
-
-        document.getElementById('testNotificationBtn')?.addEventListener('click', function() {
-            if (Notification.permission === 'granted') {
-                new Notification('형균이네 정미소 모니터링', {
-                    body: '테스트 알림입니다! 🔔'
-                });
-            } else if (Notification.permission !== 'denied') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        new Notification('형균이네 정미소 모니터링', {
-                            body: '테스트 알림입니다! 🔔'
-                        });
-                    }
-                });
-            }
-        });
-    </script>
-</body>
-</html>
-```
-
-이 코드가 현재 보고 계신 사이트와 동일한 버전입니다! 😊
+  1	<!DOCTYPE html>
+     2	<html lang="ko">
+     3	<head>
+     4	    <meta charset="UTF-8">
+     5	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     6	    <title>규니정미소 모니터링</title>
+     7	    
+     8	    <!-- PWA Meta Tags -->
+     9	    <meta name="application-name" content="규니정미소 모니터링">
+    10	    <meta name="apple-mobile-web-app-capable" content="yes">
+    11	    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    12	    <meta name="apple-mobile-web-app-title" content="규니모니터">
+    13	    <meta name="description" content="규니정미소 커뮤니티 사이트 모니터링 앱">
+    14	    <meta name="theme-color" content="#2563eb">
+    15	    
+    16	    <!-- PWA Icons -->
+    17	    <link rel="apple-touch-icon" href="icons/icon-152x152.png">
+    18	    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    19	    <link rel="manifest" href="manifest.json">
+    20	    
+    21	    <!-- CSS -->
+    22	    <script src="https://cdn.tailwindcss.com"></script>
+    23	    <script>
+    24	        tailwind.config = {
+    25	            theme: {
+    26	                extend: {
+    27	                    colors: {
+    28	                        primary: {
+    29	                            50: '#eff6ff',
+    30	                            100: '#dbeafe', 
+    31	                            500: '#3b82f6',
+    32	                            600: '#2563eb',
+    33	                            700: '#1d4ed8'
+    34	                        }
+    35	                    },
+    36	                    animation: {
+    37	                        'float': 'float 6s ease-in-out infinite',
+    38	                        'slide-up': 'slideUp 0.5s ease-out',
+    39	                        'fade-in': 'fadeIn 0.3s ease-out'
+    40	                    }
+    41	                }
+    42	            }
+    43	        }
+    44	    </script>
+    45	    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    46	    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+    47	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    48	    
+    49	    <style>
+    50	        body { 
+    51	            font-family: 'Pretendard', sans-serif; 
+    52	            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+    53	            min-height: 100vh;
+    54	        }
+    55	        
+    56	        @keyframes float {
+    57	            0%, 100% { transform: translateY(0px); }
+    58	            50% { transform: translateY(-10px); }
+    59	        }
+    60	        
+    61	        @keyframes slideUp {
+    62	            from { 
+    63	                opacity: 0;
+    64	                transform: translateY(20px);
+    65	            }
+    66	            to { 
+    67	                opacity: 1;
+    68	                transform: translateY(0);
+    69	            }
+    70	        }
+    71	        
+    72	        @keyframes fadeIn {
+    73	            from { opacity: 0; }
+    74	            to { opacity: 1; }
+    75	        }
+    76	        
+    77	        .glass-card {
+    78	            background: rgba(255, 255, 255, 0.9);
+    79	            backdrop-filter: blur(20px);
+    80	            border: 1px solid rgba(59, 130, 246, 0.1);
+    81	            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+    82	        }
+    83	        
+    84	        .board-card {
+    85	            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    86	            position: relative;
+    87	            overflow: hidden;
+    88	            min-height: 120px;
+    89	        }
+    90	        
+    91	        .board-card::before {
+    92	            content: '';
+    93	            position: absolute;
+    94	            top: 0;
+    95	            left: -100%;
+    96	            width: 100%;
+    97	            height: 100%;
+    98	            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    99	            transition: left 0.5s;
+   100	        }
+   101	        
+   102	        .board-card:hover::before {
+   103	            left: 100%;
+   104	        }
+   105	        
+   106	        .board-card:hover {
+   107	            transform: translateY(-2px) scale(1.02);
+   108	            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
+   109	        }
+   110	        
+   111	        .board-card.selected {
+   112	            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+   113	            color: white;
+   114	            transform: translateY(-2px);
+   115	            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+   116	        }
+   117	        
+   118	        .board-card.selected .board-icon {
+   119	            color: #fbbf24;
+   120	        }
+   121	        
+   122	        .sub-category {
+   123	            display: none;
+   124	            margin-top: 12px;
+   125	            padding-top: 12px;
+   126	            border-top: 1px solid rgba(255, 255, 255, 0.2);
+   127	        }
+   128	        
+   129	        .board-card.selected .sub-category {
+   130	            display: block;
+   131	        }
+   132	        
+   133	        .sub-checkbox {
+   134	            margin-right: 8px;
+   135	            margin-bottom: 6px;
+   136	        }
+   137	        
+   138	        .monitor-card {
+   139	            transition: all 0.4s ease;
+   140	            background: linear-gradient(145deg, #ffffff, #f8fafc);
+   141	            border-left: 4px solid transparent;
+   142	        }
+   143	        
+   144	        .monitor-card.active {
+   145	            border-left-color: #10b981;
+   146	            background: linear-gradient(145deg, #ecfdf5, #f0fdf4);
+   147	        }
+   148	        
+   149	        .monitor-card.changed {
+   150	            border-left-color: #f59e0b;
+   151	            background: linear-gradient(145deg, #fffbeb, #fef3c7);
+   152	        }
+   153	        
+   154	        .pulse-dot {
+   155	            animation: pulse 2s infinite;
+   156	        }
+   157	        
+   158	        .floating-element {
+   159	            animation: float 6s ease-in-out infinite;
+   160	        }
+   161	        
+   162	        .status-indicator {
+   163	            position: relative;
+   164	            display: inline-block;
+   165	        }
+   166	        
+   167	        .status-indicator::after {
+   168	            content: '';
+   169	            position: absolute;
+   170	            top: 0;
+   171	            right: 0;
+   172	            width: 8px;
+   173	            height: 8px;
+   174	            border-radius: 50%;
+   175	            background: #ef4444;
+   176	            transform: translate(50%, -50%);
+   177	        }
+   178	        
+   179	        .status-indicator.online::after {
+   180	            background: #10b981;
+   181	            animation: pulse 2s infinite;
+   182	        }
+   183	        
+   184	        .btn-primary {
+   185	            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+   186	            transition: all 0.3s ease;
+   187	        }
+   188	        
+   189	        .btn-primary:hover {
+   190	            transform: translateY(-2px);
+   191	            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+   192	        }
+   193	        
+   194	        .collapsible-content {
+   195	            max-height: 0;
+   196	            overflow: hidden;
+   197	            transition: max-height 0.3s ease-out;
+   198	        }
+   199	        
+   200	        .collapsible-content.expanded {
+   201	            max-height: 1000px;
+   202	        }
+   203	    </style>
+   204	</head>
+   205	<body class="min-h-screen font-display">
+   206	    <!-- 배경 장식 요소들 -->
+   207	    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+   208	        <div class="absolute top-20 left-10 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl floating-element"></div>
+   209	        <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl floating-element" style="animation-delay: -2s;"></div>
+   210	        <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-blue-100/40 rounded-full blur-3xl floating-element" style="animation-delay: -4s;"></div>
+   211	    </div>
+   212	
+   213	    <div class="container mx-auto px-6 py-8 relative z-10">
+   214	        <!-- 헤더 -->
+   215	        <div class="text-center mb-12 animate-slide-up">
+   216	            <div class="flex items-center justify-center mb-6">
+   217	                <div class="relative">
+   218	                    <!-- 형균님 프로필 이미지 -->
+   219	                    <div class="w-36 h-36 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white">
+   220	                        <img src="images/hyungkyun.jpg" alt="형균님 프로필" class="w-full h-full object-cover">
+   221	                    </div>
+   222	                    <!-- 온라인 상태 표시 -->
+   223	                    <div class="absolute -bottom-2 -right-2 w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl border-3 border-white">
+   224	                        <i class="fas fa-radar-dish text-white text-lg"></i>
+   225	                    </div>
+   226	                </div>
+   227	            </div>
+   228	            
+   229	            <h1 class="text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-4" style="font-family: 'Gamja Flower', cursive;">
+   230	                형균이네 정미소<br>모니터링
+   231	            </h1>
+   232	            
+   233	            <!-- 상태 표시 -->
+   234	            <div class="flex justify-center gap-4 mt-6">
+   235	                <div id="pwaStatus" class="hidden bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 px-4 py-2 rounded-full shadow-md">
+   236	                    <i class="fas fa-seedling text-amber-600 mr-2"></i>
+   237	                    <span id="pwaStatusText" class="text-amber-800 font-medium">PWA 모드</span>
+   238	                </div>
+   239	                
+   240	                <button id="installBtn" class="hidden bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 hover:from-amber-200 hover:to-yellow-200 px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-lg">
+   241	                    <i class="fas fa-download text-amber-600 mr-2"></i>
+   242	                    <span class="text-amber-800">앱 설치</span>
+   243	                </button>
+   244	            </div>
+   245	        </div>
+   246	
+   247	        <!-- 사용자 상태 및 관리자 버튼 -->
+   248	        <div class="flex justify-between items-center mb-4 animate-fade-in" style="animation-delay: 0.1s;">
+   249	            <!-- 로그인 상태 -->
+   250	            <div id="userStatus" class="flex items-center">
+   251	                <!-- 로그인된 경우 -->
+   252	                <div id="loggedInUser" class="hidden bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 px-4 py-2 rounded-full shadow-md">
+   253	                    <div class="flex items-center">
+   254	                        <div id="userAvatar" class="w-8 h-8 rounded-full overflow-hidden border-2 border-white mr-3 hidden">
+   255	                            <img id="userAvatarImg" src="" alt="프로필" class="w-full h-full object-cover">
+   256	                        </div>
+   257	                        <div id="defaultUserIcon" class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+   258	                            <i class="fas fa-user text-white text-sm"></i>
+   259	                        </div>
+   260	                        <span id="userName" class="text-green-800 font-medium"></span>
+   261	                        <button id="logoutBtn" class="ml-3 text-green-600 hover:text-green-800 transition-colors">
+   262	                            <i class="fas fa-sign-out-alt"></i>
+   263	                        </button>
+   264	                    </div>
+   265	                </div>
+   266	                
+   267	                <!-- 로그인하지 않은 경우 -->
+   268	                <div id="notLoggedIn" class="bg-gradient-to-r from-blue-100 to-cyan-100 border border-blue-200 px-4 py-2 rounded-full shadow-md">
+   269	                    <a href="user-login.html" class="flex items-center text-blue-800 font-medium hover:text-blue-900 transition-colors">
+   270	                        <i class="fas fa-sign-in-alt text-blue-600 mr-2"></i>
+   271	                        로그인
+   272	                    </a>
+   273	                </div>
+   274	            </div>
+   275	            
+   276	            <!-- 관리자 버튼 -->
+   277	            <div>
+   278	                <a href="admin-login.html" class="bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 hover:from-amber-200 hover:to-yellow-200 px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-lg">
+   279	                    <i class="fas fa-crown text-yellow-500 mr-2"></i>
+   280	                    <span class="text-amber-800">관리자</span>
+   281	                </a>
+   282	            </div>
+   283	        </div>
+   284	
+   285	        <!-- 게시판 선택 -->
+   286	        <div class="glass-card rounded-3xl p-8 mb-8 animate-fade-in" style="animation-delay: 0.2s;">
+   287	            <div class="text-center mb-8">
+   288	                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+   289	                    <i class="fas fa-list-check text-blue-600 mr-3"></i>
+   290	                    모니터링할 게시판 선택
+   291	                </h2>
+   292	                <p class="text-gray-600">관심 있는 게시판을 선택하여 새 글과 댓글 알림을 받아보세요</p>
+   293	            </div>
+   294	            
+   295	            <!-- 일반 게시판 -->
+   296	            <div class="mb-8">
+   297	                <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+   298	                    <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+   299	                    일반 게시판
+   300	                </h3>
+   301	                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+   302	                    <!-- 공지사항 -->
+   303	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group">
+   304	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-notice" data-name="공지사항">
+   305	                        <div class="flex items-center justify-between mb-2">
+   306	                            <div class="board-icon text-red-500 text-xl">
+   307	                                <i class="fas fa-bullhorn"></i>
+   308	                            </div>
+   309	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   310	                                <i class="fas fa-check-circle text-green-500"></i>
+   311	                            </div>
+   312	                        </div>
+   313	                        <h4 class="font-bold text-base mb-1">📢 공지사항</h4>
+   314	                        <p class="text-xs text-gray-600">중요한 공지와 업데이트</p>
+   315	                    </label>
+   316	
+   317	                    <!-- 정미소 근무일지 -->
+   318	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group">
+   319	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-worklog" data-name="정미소 근무일지">
+   320	                        <div class="flex items-center justify-between mb-2">
+   321	                            <div class="board-icon text-blue-500 text-xl">
+   322	                                <i class="fas fa-calendar-check"></i>
+   323	                            </div>
+   324	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   325	                                <i class="fas fa-check-circle text-green-500"></i>
+   326	                            </div>
+   327	                        </div>
+   328	                        <h4 class="font-bold text-base mb-1">📋 정미소 근무일지</h4>
+   329	                        <p class="text-xs text-gray-600">일일 업무 내용과 기록</p>
+   330	                    </label>
+   331	
+   332	                    <!-- ZO!형균 -->
+   333	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group">
+   334	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-hyungkyun" data-name="ZO!형균">
+   335	                        <div class="flex items-center justify-between mb-2">
+   336	                            <div class="board-icon text-purple-500 text-xl">
+   337	                                <i class="fas fa-star"></i>
+   338	                            </div>
+   339	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   340	                                <i class="fas fa-check-circle text-green-500"></i>
+   341	                            </div>
+   342	                        </div>
+   343	                        <h4 class="font-bold text-base mb-1">⭐ ZO!형균</h4>
+   344	                        <p class="text-xs text-gray-600">형균님의 특별한 소식</p>
+   345	                    </label>
+   346	
+   347	                    <!-- 한줄인사 -->
+   348	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group border-2 border-amber-200">
+   349	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-1040" data-name="한줄인사" data-special="true">
+   350	                        <div class="flex items-center justify-between mb-2">
+   351	                            <div class="board-icon text-amber-500 text-xl">
+   352	                                <i class="fas fa-comments"></i>
+   353	                            </div>
+   354	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   355	                                <i class="fas fa-check-circle text-green-500"></i>
+   356	                            </div>
+   357	                        </div>
+   358	                        <h4 class="font-bold text-base mb-1">👋 한줄인사</h4>
+   359	                        <p class="text-xs text-gray-600">간단한 인사와 소통</p>
+   360	                        <div class="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full mt-2 text-center">특별설정</div>
+   361	                    </label>
+   362	
+   363	                    <!-- 한줄인사 특별 설정 (인라인) -->
+   364	                    <div id="onelineSpecialSettings" class="hidden col-span-full mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+   365	                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+   366	                            <div>
+   367	                                <label class="block text-sm font-medium text-amber-700 mb-2">모니터링할 사용자</label>
+   368	                                <div id="userList" class="space-y-2 mb-3">
+   369	                                    <div class="flex items-center gap-2">
+   370	                                        <input type="text" class="user-input flex-1 px-3 py-2 text-sm border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-400" 
+   371	                                               placeholder="조형균" value="조형균">
+   372	                                        <button class="remove-user text-red-500 hover:text-red-700 text-sm" style="display: none;">
+   373	                                            <i class="fas fa-times"></i>
+   374	                                        </button>
+   375	                                    </div>
+   376	                                </div>
+   377	                                <button id="addUserBtn" class="text-sm text-amber-600 hover:text-amber-800 font-medium">
+   378	                                    <i class="fas fa-plus mr-1"></i>사용자 추가
+   379	                                </button>
+   380	                            </div>
+   381	                            <div class="flex items-center">
+   382	                                <label class="flex items-center cursor-pointer">
+   383	                                    <input type="checkbox" id="onelineMyReplies" class="form-checkbox h-4 w-4 text-amber-500 rounded">
+   384	                                    <span class="ml-2 text-sm text-amber-700">내 글에 댓글 알림</span>
+   385	                                </label>
+   386	                            </div>
+   387	                        </div>
+   388	                    </div>
+   389	
+   390	                    <!-- 미소들의 수다 -->
+   391	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group">
+   392	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-chat" data-name="미소들의 수다">
+   393	                        <div class="flex items-center justify-between mb-2">
+   394	                            <div class="board-icon text-green-500 text-xl">
+   395	                                <i class="fas fa-comments-dollar"></i>
+   396	                            </div>
+   397	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   398	                                <i class="fas fa-check-circle text-green-500"></i>
+   399	                            </div>
+   400	                        </div>
+   401	                        <h4 class="font-bold text-base mb-1">💬 미소들의 수다</h4>
+   402	                        <p class="text-xs text-gray-600">자유로운 대화와 소통</p>
+   403	                    </label>
+   404	
+   405	                    <!-- 단관/행사 게시판 -->
+   406	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group">
+   407	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-event" data-name="단관/행사 게시판">
+   408	                        <div class="flex items-center justify-between mb-2">
+   409	                            <div class="board-icon text-pink-500 text-xl">
+   410	                                <i class="fas fa-calendar-alt"></i>
+   411	                            </div>
+   412	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   413	                                <i class="fas fa-check-circle text-green-500"></i>
+   414	                            </div>
+   415	                        </div>
+   416	                        <h4 class="font-bold text-base mb-1">🎉 단관/행사 게시판</h4>
+   417	                        <p class="text-xs text-gray-600">이벤트와 모임 소식</p>
+   418	                        
+   419	                        <!-- 하위 카테고리 -->
+   420	                        <div class="sub-category">
+   421	                            <div class="text-xs font-medium text-white mb-2">세부 카테고리:</div>
+   422	                            <div class="flex flex-wrap gap-1">
+   423	                                <label class="sub-checkbox flex items-center text-xs text-white">
+   424	                                    <input type="checkbox" class="mr-1" data-sub="단관"> 단관
+   425	                                </label>
+   426	                                <label class="sub-checkbox flex items-center text-xs text-white">
+   427	                                    <input type="checkbox" class="mr-1" data-sub="입금"> 입금
+   428	                                </label>
+   429	                                <label class="sub-checkbox flex items-center text-xs text-white">
+   430	                                    <input type="checkbox" class="mr-1" data-sub="행사"> 행사
+   431	                                </label>
+   432	                            </div>
+   433	                        </div>
+   434	                    </label>
+   435	
+   436	                    <!-- 양도게시판 -->
+   437	                    <label class="board-card glass-card rounded-xl p-4 cursor-pointer group">
+   438	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-trade" data-name="양도게시판">
+   439	                        <div class="flex items-center justify-between mb-2">
+   440	                            <div class="board-icon text-orange-500 text-xl">
+   441	                                <i class="fas fa-exchange-alt"></i>
+   442	                            </div>
+   443	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   444	                                <i class="fas fa-check-circle text-green-500"></i>
+   445	                            </div>
+   446	                        </div>
+   447	                        <h4 class="font-bold text-base mb-1">🔄 양도게시판</h4>
+   448	                        <p class="text-xs text-gray-600">물품 양도와 거래</p>
+   449	                        
+   450	                        <!-- 하위 카테고리 -->
+   451	                        <div class="sub-category">
+   452	                            <div class="text-xs font-medium text-white mb-2">세부 카테고리:</div>
+   453	                            <div class="flex flex-wrap gap-1">
+   454	                                <label class="sub-checkbox flex items-center text-xs text-white">
+   455	                                    <input type="checkbox" class="mr-1" data-sub="양도"> 양도
+   456	                                </label>
+   457	                                <label class="sub-checkbox flex items-center text-xs text-white">
+   458	                                    <input type="checkbox" class="mr-1" data-sub="교환"> 교환
+   459	                                </label>
+   460	                            </div>
+   461	                        </div>
+   462	                    </label>
+   463	
+   464	                    <!-- 쪽지함 (로그인 사용자만) -->
+   465	                    <label id="messageBoard" class="board-card glass-card rounded-xl p-4 cursor-pointer group border-2 border-blue-200 hidden">
+   466	                        <input type="checkbox" class="board-checkbox sr-only" data-board="ab-msg_recv" data-name="쪽지함">
+   467	                        <div class="flex items-center justify-between mb-2">
+   468	                            <div class="board-icon text-indigo-500 text-xl">
+   469	                                <i class="fas fa-envelope"></i>
+   470	                            </div>
+   471	                            <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+   472	                                <i class="fas fa-check-circle text-green-500"></i>
+   473	                            </div>
+   474	                        </div>
+   475	                        <h4 class="font-bold text-base mb-1">📨 쪽지함</h4>
+   476	                        <p class="text-xs text-gray-600">개인 메시지 수신</p>
+   477	                        <div class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full mt-2 text-center">개인 전용</div>
+   478	                    </label>
+   479	                </div>
+   480	            </div>
+   481	        </div>
+   482	
+   483	
+   484	
+   485	        <!-- 설정 (접을 수 있음) -->
+   486	        <div class="glass-card rounded-3xl p-6 mb-6 animate-fade-in" style="animation-delay: 0.4s;">
+   487	            <button id="settingsToggle" class="w-full text-left flex items-center justify-between mb-3 focus:outline-none">
+   488	                <h2 class="text-xl font-bold text-gray-800">
+   489	                    <i class="fas fa-cog text-blue-600 mr-2"></i>
+   490	                    설정
+   491	                </h2>
+   492	                <i id="settingsIcon" class="fas fa-chevron-down text-gray-500 transition-transform duration-300"></i>
+   493	            </button>
+   494	            
+   495	            <div id="settingsContent" class="collapsible-content">
+   496	                <div class="pt-3 border-t">
+   497	                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+   498	                        <!-- 댓글 알림 설정 -->
+   499	                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-3 border border-blue-200">
+   500	                            <h4 class="font-medium text-sm text-gray-800 mb-2">
+   501	                                <i class="fas fa-comment-dots text-blue-500 mr-1"></i>
+   502	                                댓글 알림
+   503	                            </h4>
+   504	                            <label class="inline-flex items-center cursor-pointer">
+   505	                                <input type="checkbox" id="commentNotifications" class="form-checkbox h-3 w-3 text-blue-500 rounded" checked>
+   506	                                <span class="ml-2 text-xs text-gray-700">새 댓글 알림 받기</span>
+   507	                            </label>
+   508	                        </div>
+   509	
+   510	                        <!-- 체크 간격 -->
+   511	                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
+   512	                            <h4 class="font-medium text-sm text-gray-800 mb-2">
+   513	                                <i class="fas fa-clock text-green-500 mr-1"></i>
+   514	                                체크 간격
+   515	                            </h4>
+   516	                            <select id="checkInterval" class="w-full px-2 py-1 border border-green-200 rounded focus:ring-1 focus:ring-green-400 text-xs">
+   517	                                <option value="0">수동으로만 체크</option>
+   518	                                <option value="1">1분마다 (테스트용)</option>
+   519	                                <option value="5" selected>5분마다</option>
+   520	                                <option value="10">10분마다</option>
+   521	                                <option value="30">30분마다</option>
+   522	                                <option value="60">1시간마다</option>
+   523	                            </select>
+   524	                        </div>
+   525	
+   526	                        <!-- 알림 설정 -->
+   527	                        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-3 border border-purple-200">
+   528	                            <h4 class="font-medium text-sm text-gray-800 mb-2">
+   529	                                <i class="fas fa-bell text-purple-500 mr-1"></i>
+   530	                                알림 옵션
+   531	                            </h4>
+   532	                            <div class="space-y-1">
+   533	                                <label class="inline-flex items-center cursor-pointer">
+   534	                                    <input type="checkbox" id="soundAlert" class="form-checkbox h-3 w-3 text-purple-500 rounded" checked>
+   535	                                    <span class="ml-2 text-xs text-gray-700">소리 알림</span>
+   536	                                </label><br>
+   537	                                <label class="inline-flex items-center cursor-pointer">
+   538	                                    <input type="checkbox" id="desktopAlert" class="form-checkbox h-3 w-3 text-purple-500 rounded" checked>
+   539	                                    <span class="ml-2 text-xs text-gray-700">데스크톱 알림</span>
+   540	                                </label>
+   541	                            </div>
+   542	                        </div>
+   543	                    </div>
+   544	
+   545	                    <!-- 컨트롤 버튼 -->
+   546	                    <div class="flex flex-wrap justify-center gap-3 mb-3">
+   547	                        <button id="startMonitoringBtn" class="btn-primary text-white px-6 py-2 rounded-xl font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300">
+   548	                            <i class="fas fa-play mr-1"></i>모니터링 시작
+   549	                        </button>
+   550	                        <button id="checkAllBtn" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:shadow-lg text-sm">
+   551	                            <i class="fas fa-sync mr-1"></i>즉시 체크
+   552	                        </button>
+   553	                        <button id="testNotificationBtn" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-4 py-2 rounded-xl font-medium transition-all duration-300 hover:shadow-lg text-sm">
+   554	                            <i class="fas fa-bell mr-1"></i>알림 테스트
+   555	                        </button>
+   556	                    </div>
+   557	
+   558	                    <!-- 고급 옵션 -->
+   559	                    <div class="pt-2 border-t">
+   560	                        <div class="flex flex-wrap justify-center gap-2">
+   561	                            <button id="clearHistoryBtn" class="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-3 py-1 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-xs">
+   562	                                <i class="fas fa-trash mr-1"></i>히스토리 삭제
+   563	                            </button>
+   564	                            <button id="exportDataBtn" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-3 py-1 rounded-lg font-medium transition-all duration-300 hover:shadow-lg text-xs">
+   565	                                <i class="fas fa-download mr-1"></i>데이터 내보내기
+   566	                            </button>
+   567	                        </div>
+   568	                    </div>
+   569	                </div>
+   570	            </div>
+   571	        </div>
+   572	
+   573	        <!-- 모니터링 목록 -->
+   574	        <div class="glass-card rounded-3xl p-6 mb-6 animate-fade-in" style="animation-delay: 1s;">
+   575	            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+   576	                <i class="fas fa-list text-blue-600 mr-2"></i>
+   577	                활성 모니터링
+   578	            </h2>
+   579	            <div id="monitorList" class="space-y-3 max-h-80 overflow-y-auto">
+   580	                <!-- 동적으로 생성될 모니터링 카드들 -->
+   581	            </div>
+   582	            <div id="emptyState" class="text-center py-12">
+   583	                <div class="floating-element">
+   584	                    <i class="fas fa-search text-5xl text-gray-300 mb-4"></i>
+   585	                </div>
+   586	                <h3 class="text-xl font-semibold text-gray-400 mb-2">아직 모니터링 중인 게시판이 없습니다</h3>
+   587	                <p class="text-gray-500 text-sm">위에서 게시판을 선택하고 "모니터링 시작" 버튼을 클릭하세요</p>
+   588	            </div>
+   589	        </div>
+   590	
+   591	        <!-- 히스토리 -->
+   592	        <div class="glass-card rounded-3xl p-6 animate-fade-in" style="animation-delay: 1.2s;">
+   593	            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+   594	                <i class="fas fa-history text-blue-600 mr-2"></i>
+   595	                알림 히스토리
+   596	            </h2>
+   597	            <div id="historyList" class="space-y-2 max-h-64 overflow-y-auto">
+   598	                <!-- 동적으로 생성될 히스토리 항목들 -->
+   599	            </div>
+   600	            <div id="emptyHistory" class="text-center py-10">
+   601	                <div class="floating-element">
+   602	                    <i class="fas fa-clock text-4xl text-gray-300 mb-3"></i>
+   603	                </div>
+   604	                <h3 class="text-lg font-semibold text-gray-400 mb-1">아직 알림 기록이 없습니다</h3>
+   605	                <p class="text-gray-500 text-sm">모니터링이 시작되면 여기에 알림 기록이 표시됩니다</p>
+   606	            </div>
+   607	        </div>
+   608	        
+   609	        <!-- 크레딧 -->
+   610	        <div class="text-right py-6 animate-fade-in" style="animation-delay: 1.5s;">
+   611	            <p class="text-xs text-gray-400">
+   612	                made by 이루다
+   613	            </p>
+   614	        </div>
+   615	    </div>
+   616	
+   617	    <!-- JavaScript -->
+   618	    <script src="js/main.js"></script>
+   619	    
+   620	    <!-- PWA Registration Script -->
+   621	    <script>
+   622	        // Service Worker 등록
+   623	        if ('serviceWorker' in navigator) {
+   624	            window.addEventListener('load', () => {
+   625	                navigator.serviceWorker.register('/sw.js')
+   626	                    .then((registration) => {
+   627	                        console.log('Service Worker 등록 성공:', registration.scope);
+   628	                        
+   629	                        registration.addEventListener('updatefound', () => {
+   630	                            const newWorker = registration.installing;
+   631	                            newWorker.addEventListener('statechange', () => {
+   632	                                if (newWorker.state === 'installed') {
+   633	                                    if (navigator.serviceWorker.controller) {
+   634	                                        showUpdateNotification();
+   635	                                    }
+   636	                                }
+   637	                            });
+   638	                        });
+   639	                    })
+   640	                    .catch((error) => {
+   641	                        console.log('Service Worker 등록 실패:', error);
+   642	                    });
+   643	            });
+   644	        }
+   645	
+   646	        // PWA 설치 이벤트 처리
+   647	        let deferredPrompt;
+   648	        const installBtn = document.getElementById('installBtn');
+   649	        const pwaStatus = document.getElementById('pwaStatus');
+   650	
+   651	        window.addEventListener('beforeinstallprompt', (e) => {
+   652	            e.preventDefault();
+   653	            deferredPrompt = e;
+   654	            installBtn.classList.remove('hidden');
+   655	        });
+   656	
+   657	        installBtn.addEventListener('click', async () => {
+   658	            if (!deferredPrompt) return;
+   659	            
+   660	            deferredPrompt.prompt();
+   661	            const { outcome } = await deferredPrompt.userChoice;
+   662	            
+   663	            if (outcome === 'accepted') {
+   664	                console.log('PWA 설치됨');
+   665	            }
+   666	            
+   667	            deferredPrompt = null;
+   668	            installBtn.classList.add('hidden');
+   669	        });
+   670	
+   671	        window.addEventListener('appinstalled', (evt) => {
+   672	            console.log('PWA 설치 완료');
+   673	            pwaStatus.classList.remove('hidden');
+   674	            installBtn.classList.add('hidden');
+   675	        });
+   676	
+   677	        function isPWA() {
+   678	            return window.matchMedia('(display-mode: standalone)').matches || 
+   679	                   window.navigator.standalone || 
+   680	                   document.referrer.includes('android-app://');
+   681	        }
+   682	
+   683	        if (isPWA()) {
+   684	            pwaStatus.classList.remove('hidden');
+   685	            document.getElementById('pwaStatusText').textContent = 'PWA 모드로 실행 중';
+   686	        }
+   687	
+   688	        function showUpdateNotification() {
+   689	            const toast = document.createElement('div');
+   690	            toast.className = 'fixed top-4 right-4 glass-card text-gray-800 px-6 py-4 rounded-2xl shadow-lg z-50 animate-slide-up';
+   691	            toast.innerHTML = `
+   692	                <div class="flex items-center gap-3">
+   693	                    <i class="fas fa-sync text-blue-600"></i>
+   694	                    <span class="font-medium">새 버전이 사용 가능합니다!</span>
+   695	                    <button onclick="location.reload()" class="btn-primary text-white px-3 py-1 rounded-lg text-sm font-medium">
+   696	                        새로고침
+   697	                    </button>
+   698	                </div>
+   699	            `;
+   700	            document.body.appendChild(toast);
+   701	            
+   702	            setTimeout(() => {
+   703	                if (document.body.contains(toast)) {
+   704	                    document.body.removeChild(toast);
+   705	                }
+   706	            }, 10000);
+   707	        }
+   708	
+   709	        // 로그인 상태 관리
+   710	        function checkLoginStatus() {
+   711	            const isLoggedIn = localStorage.getItem('isLoggedIn');
+   712	            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+   713	            
+   714	            if (isLoggedIn === 'true' && currentUser.name) {
+   715	                showLoggedInState(currentUser);
+   716	                applyUserSettings(currentUser);
+   717	            } else {
+   718	                showNotLoggedInState();
+   719	            }
+   720	        }
+   721	        
+   722	        function showLoggedInState(user) {
+   723	            document.getElementById('loggedInUser').classList.remove('hidden');
+   724	            document.getElementById('notLoggedIn').classList.add('hidden');
+   725	            
+   726	            document.getElementById('userName').textContent = user.name;
+   727	            
+   728	            // 아바타 처리
+   729	            if (user.avatar) {
+   730	                document.getElementById('userAvatar').classList.remove('hidden');
+   731	                document.getElementById('userAvatarImg').src = user.avatar;
+   732	                document.getElementById('defaultUserIcon').classList.add('hidden');
+   733	            } else {
+   734	                document.getElementById('userAvatar').classList.add('hidden');
+   735	                document.getElementById('defaultUserIcon').classList.remove('hidden');
+   736	            }
+   737	        }
+   738	        
+   739	        function showNotLoggedInState() {
+   740	            document.getElementById('loggedInUser').classList.add('hidden');
+   741	            document.getElementById('notLoggedIn').classList.remove('hidden');
+   742	            hidePersonalFeatures();
+   743	        }
+   744	        
+   745	        function applyUserSettings(user) {
+   746	            // 쪽지함 게시판 표시 (로그인 사용자만)
+   747	            document.getElementById('messageBoard').classList.remove('hidden');
+   748	            
+   749	            // 사용자 설정 적용
+   750	            if (user.settings) {
+   751	                document.getElementById('commentNotifications').checked = user.settings.commentNotifications;
+   752	                document.getElementById('soundAlert').checked = user.settings.soundAlert;
+   753	                document.getElementById('desktopAlert').checked = user.settings.desktopAlert;
+   754	                document.getElementById('checkInterval').value = user.settings.checkInterval;
+   755	            }
+   756	            
+   757	            // 즐겨찾는 게시판 자동 선택
+   758	            if (user.favoriteBoards) {
+   759	                user.favoriteBoards.forEach(boardId => {
+   760	                    const checkbox = document.querySelector(`[data-board="${boardId}"]`);
+   761	                    if (checkbox) {
+   762	                        checkbox.checked = true;
+   763	                        checkbox.closest('.board-card').classList.add('selected');
+   764	                        
+   765	                        // 특별 설정 표시 (한줄인사)
+   766	                        if (boardId === 'ab-1040') {
+   767	                            document.getElementById('onelineSpecialSettings').classList.remove('hidden');
+   768	                            // 현재 사용자를 기본값으로 설정
+   769	                            const userInput = document.querySelector('.user-input');
+   770	                            if (userInput && user.name) {
+   771	                                userInput.value = user.name;
+   772	                            }
+   773	                        }
+   774	                    }
+   775	                });
+   776	            }
+   777	        }
+   778	        
+   779	        function hidePersonalFeatures() {
+   780	            // 쪽지함 숨기기
+   781	            document.getElementById('messageBoard').classList.add('hidden');
+   782	        }
+   783	        
+   784	        function logout() {
+   785	            localStorage.removeItem('isLoggedIn');
+   786	            localStorage.removeItem('currentUser');
+   787	            localStorage.removeItem('loginTime');
+   788	            
+   789	            // 페이지 새로고침으로 초기 상태로 복원
+   790	            window.location.reload();
+   791	        }
+   792	
+   793	        // 설정 토글
+   794	        document.addEventListener('DOMContentLoaded', () => {
+   795	            // 로그인 상태 확인
+   796	            checkLoginStatus();
+   797	            
+   798	            // 로그아웃 버튼 이벤트
+   799	            document.getElementById('logoutBtn').addEventListener('click', logout);
+   800	            const settingsToggle = document.getElementById('settingsToggle');
+   801	            const settingsContent = document.getElementById('settingsContent');
+   802	            const settingsIcon = document.getElementById('settingsIcon');
+   803	
+   804	            settingsToggle.addEventListener('click', () => {
+   805	                if (settingsContent.classList.contains('expanded')) {
+   806	                    settingsContent.classList.remove('expanded');
+   807	                    settingsIcon.style.transform = 'rotate(0deg)';
+   808	                } else {
+   809	                    settingsContent.classList.add('expanded');
+   810	                    settingsIcon.style.transform = 'rotate(180deg)';
+   811	                }
+   812	            });
+   813	
+   814	            // 보드 카드 선택 애니메이션
+   815	            document.querySelectorAll('.board-checkbox').forEach(checkbox => {
+   816	                checkbox.addEventListener('change', (e) => {
+   817	                    const card = e.target.closest('.board-card');
+   818	                    if (e.target.checked) {
+   819	                        card.classList.add('selected');
+   820	                    } else {
+   821	                        card.classList.remove('selected');
+   822	                    }
+   823	                });
+   824	            });
+   825	
+   826	            // 한줄인사 특별 설정 토글
+   827	            const onelineCheckbox = document.querySelector('[data-board="ab-1040"]');
+   828	            const onelineSpecialSettings = document.getElementById('onelineSpecialSettings');
+   829	            
+   830	            if (onelineCheckbox) {
+   831	                onelineCheckbox.addEventListener('change', (e) => {
+   832	                    if (e.target.checked) {
+   833	                        onelineSpecialSettings.classList.remove('hidden');
+   834	                    } else {
+   835	                        onelineSpecialSettings.classList.add('hidden');
+   836	                    }
+   837	                });
+   838	            }
+   839	
+   840	            // 체크박스는 기본 스타일 사용하므로 별도 애니메이션 불필요
+   841	        });
+   842	    </script>
+   843	</body>
+   844	</html>
