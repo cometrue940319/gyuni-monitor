@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 - 규니정미소 모니터링</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 헤더 -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-shield-alt text-purple-600 mr-3"></i>
+                관리자 대시보드
+            </h1>
+            <div class="flex gap-2">
+                <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>메인으로
+                </a>
+            </div>
+        </div>
+
+        <!-- 관리자 전용 게시판 -->
+        <div class="bg-white rounded-xl shadow-sm border p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">
+                <i class="fas fa-shield-alt text-red-600 mr-2"></i>
+                관리자 전용 게시판 모니터링
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- 첫인사게시판 -->
+                <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-6 border border-red-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-user-plus text-red-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">첫인사게시판(등업)</h3>
+                                <p class="text-sm text-gray-600">신규 회원 등업 관리</p>
+                            </div>
+                        </div>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="adminBoard1" class="form-checkbox h-5 w-5 text-red-500 rounded">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gyuni Live 승인 -->
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-video text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">Gyuni Live 승인</h3>
+                                <p class="text-sm text-gray-600">라이브 방송 승인 요청</p>
+                            </div>
+                        </div>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="adminBoard2" class="form-checkbox h-5 w-5 text-purple-500 rounded">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button id="startAdminMonitoringBtn" class="bg-gradient-to-r from-red-500 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold">
+                    <i class="fas fa-play mr-2"></i>관리자 모니터링 시작
+                </button>
+                <button id="checkAdminBoardsBtn" class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold">
+                    <i class="fas fa-sync mr-2"></i>즉시 체크
+                </button>
+            </div>
+        </div>
+
+        <!-- 통계 카드들 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">활성 모니터</p>
+                        <p class="text-2xl font-bold text-gray-900">0</p>
+                    </div>
+                    <div class="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-radar-dish text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">총 알림</p>
+                        <p class="text-2xl font-bold text-gray-900">0</p>
+                    </div>
+                    <div class="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-bell text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">마지막 체크</p>
+                        <p class="text-2xl font-bold text-gray-900">-</p>
+                    </div>
+                    <div class="h-12 w-12 bg-amber-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-history text-amber-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">시스템 상태</p>
+                        <p class="text-2xl font-bold text-green-600">정상</p>
+                    </div>
+                    <div class="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-server text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 차트 섹션 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">시간별 알림 통계</h3>
+                <canvas id="notificationChart" style="height: 300px;"></canvas>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">게시판별 활동 분포</h3>
+                <canvas id="boardChart" style="height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 관리자 인증 체크
+        if (localStorage.getItem('admin-auth') !== 'true') {
+            window.location.href = 'admin-login.html';
+        }
+
+        // 기본 차트 초기화
+        const ctx1 = document.getElementById('notificationChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [{
+                    label: '알림 수',
+                    data: [2, 1, 4, 8, 5, 3],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        const ctx2 = document.getElementById('boardChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['공지사항', '한줄인사', '미소들의 수다', '기타'],
+                datasets: [{
+                    data: [30, 25, 20, 25],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html>
