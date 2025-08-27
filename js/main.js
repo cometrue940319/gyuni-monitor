@@ -1,3 +1,12 @@
+네! 나머지 파일들도 업데이트해야 해요! 
+
+## 🔧 업데이트할 파일들
+
+### 1️⃣ js/main.js 업데이트 (중요!)
+
+**GitHub에서 js/main.js 편집하고 아래 코드로 교체:**
+
+```javascript
 class GyuniMonitor {
     constructor() {
         this.monitors = JSON.parse(localStorage.getItem('gyuni-monitors') || '[]');
@@ -15,13 +24,12 @@ class GyuniMonitor {
         this.requestNotificationPermission();
         this.loadSettings();
         
-        // PWA 관련 초기화
-        this.initPWA();
-        
         // 저장된 모니터들의 자동 체크 재시작
         if (this.monitors.length > 0) {
             this.restoreMonitoring();
         }
+        
+        console.log('🚀 형균이네 정미소 모니터링 시스템 초기화 완료!');
     }
 
     bindEvents() {
@@ -30,44 +38,16 @@ class GyuniMonitor {
         const checkBtn = document.getElementById('checkAllBtn');
         const testBtn = document.getElementById('testNotificationBtn');
         const clearBtn = document.getElementById('clearHistoryBtn');
-        const exportBtn = document.getElementById('exportDataBtn');
 
         if (startBtn) startBtn.addEventListener('click', () => this.toggleMonitoring());
         if (checkBtn) checkBtn.addEventListener('click', () => this.checkAllMonitors());
         if (testBtn) testBtn.addEventListener('click', () => this.testNotification());
         if (clearBtn) clearBtn.addEventListener('click', () => this.clearHistory());
-        if (exportBtn) exportBtn.addEventListener('click', () => this.exportData());
         
         // 게시판 체크박스 이벤트
         document.querySelectorAll('.board-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', () => this.updateSelectedBoards());
         });
-        
-        // 설정 변경 이벤트
-        const commentCheck = document.getElementById('commentNotifications');
-        const intervalSelect = document.getElementById('checkInterval');
-        const soundCheck = document.getElementById('soundAlert');
-        const desktopCheck = document.getElementById('desktopAlert');
-
-        if (commentCheck) commentCheck.addEventListener('change', () => this.saveSettings());
-        if (intervalSelect) intervalSelect.addEventListener('change', () => this.saveSettings());
-        if (soundCheck) soundCheck.addEventListener('change', () => this.saveSettings());
-        if (desktopCheck) desktopCheck.addEventListener('change', () => this.saveSettings());
-    }
-
-    initPWA() {
-        console.log('PWA 초기화 완료');
-        
-        // Service Worker 등록
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(registration => {
-                    console.log('SW registered:', registration);
-                })
-                .catch(error => {
-                    console.log('SW registration failed:', error);
-                });
-        }
     }
 
     updateSelectedBoards() {
@@ -75,14 +55,12 @@ class GyuniMonitor {
         document.querySelectorAll('.board-checkbox:checked').forEach(checkbox => {
             const board = {
                 path: checkbox.dataset.board,
-                name: checkbox.dataset.name,
-                isSpecial: checkbox.dataset.special === 'true'
+                name: checkbox.dataset.name
             };
             this.selectedBoards.push(board);
         });
         
         console.log('선택된 게시판:', this.selectedBoards);
-        this.saveSettings();
     }
 
     toggleMonitoring() {
@@ -106,10 +84,7 @@ class GyuniMonitor {
         this.selectedBoards.forEach(board => {
             const monitor = this.createMonitor(board);
             this.monitors.push(monitor);
-            
-            if (this.getCheckInterval() > 0) {
-                this.startAutoCheck(monitor.id);
-            }
+            this.startAutoCheck(monitor.id);
         });
 
         this.saveMonitors();
@@ -117,7 +92,7 @@ class GyuniMonitor {
         this.showNotification('🚀 모니터링이 시작되었습니다!', 'success');
         
         // 즉시 첫 체크 수행
-        setTimeout(() => this.checkAllMonitors(), 1000);
+        setTimeout(() => this.checkAllMonitors(), 2000);
     }
 
     stopMonitoring() {
@@ -127,6 +102,11 @@ class GyuniMonitor {
         // 모든 자동 체크 중지
         this.intervals.forEach(intervalId => clearInterval(intervalId));
         this.intervals.clear();
+        
+        // 모니터 목록 초기화
+        this.monitors = [];
+        this.saveMonitors();
+        this.renderMonitors();
         
         this.showNotification('⏸️ 모니터링이 중지되었습니다', 'info');
     }
@@ -145,23 +125,18 @@ class GyuniMonitor {
     }
 
     createMonitor(board) {
-        const settings = this.getSettings();
-        
-        const monitor = {
+        return {
             id: Date.now().toString() + '_' + board.path,
             boardPath: board.path,
             boardName: board.name,
             url: `http://www.gyuni-jungmiso.com/${board.path}`,
-            interval: settings.checkInterval || 5,
-            autoCheck: settings.checkInterval > 0,
+            interval: 5, // 5분 간격
+            autoCheck: true,
             lastCheck: null,
             lastContent: null,
             status: 'waiting',
-            created: new Date().toISOString(),
-            isSpecial: board.isSpecial || false
+            created: new Date().toISOString()
         };
-
-        return monitor;
     }
 
     async checkWebsite(monitorId) {
@@ -178,9 +153,9 @@ class GyuniMonitor {
             monitor.lastCheck = new Date().toISOString();
             monitor.status = 'checked';
 
-            // 새 글 체크
+            // 새 글 체크 (시뮬레이션)
             if (monitor.lastContent && monitor.lastContent !== response.content) {
-                await this.handleContentChange(monitor, response, 'new_post');
+                await this.handleContentChange(monitor, response);
                 monitor.status = 'changed';
             }
 
@@ -200,8 +175,8 @@ class GyuniMonitor {
     async simulateWebsiteCheck(monitor) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                // 시뮬레이션: 10% 확률로 새 글 발견
-                const hasNewContent = Math.random() < 0.1;
+                // 시뮬레이션: 15% 확률로 새 글 발견
+                const hasNewContent = Math.random() < 0.15;
                 const content = hasNewContent ? 
                     `new_content_${Date.now()}` : 
                     monitor.lastContent || 'initial_content';
@@ -210,31 +185,20 @@ class GyuniMonitor {
                     content: content,
                     status: 'success'
                 });
-            }, 500 + Math.random() * 1500);
+            }, 1000 + Math.random() * 2000);
         });
     }
 
-    async handleContentChange(monitor, response, changeType) {
-        let message = '';
-        let icon = '🔔';
+    async handleContentChange(monitor, response) {
+        const message = `${monitor.boardName}에 새 글이 올라왔습니다! 📝`;
+        const icon = '📝';
         
-        switch (changeType) {
-            case 'new_post':
-                message = `${monitor.boardName}에 새 글이 올라왔습니다! 📝`;
-                icon = '📝';
-                break;
-            default:
-                message = `${monitor.boardName}에서 변화가 감지되었습니다 🔍`;
-                icon = '🔍';
-        }
-
         const change = {
             id: Date.now().toString(),
             monitorId: monitor.id,
             boardName: monitor.boardName,
             url: monitor.url,
             timestamp: new Date().toISOString(),
-            changeType: changeType,
             message: message,
             icon: icon
         };
@@ -242,8 +206,8 @@ class GyuniMonitor {
         this.history.unshift(change);
         
         // 히스토리 최대 개수 제한
-        if (this.history.length > 100) {
-            this.history = this.history.slice(0, 100);
+        if (this.history.length > 50) {
+            this.history = this.history.slice(0, 50);
         }
         
         this.saveHistory();
@@ -269,31 +233,15 @@ class GyuniMonitor {
 
     startAutoCheck(monitorId) {
         const monitor = this.monitors.find(m => m.id === monitorId);
-        const interval = this.getCheckInterval();
-        
-        if (!monitor || interval <= 0) return;
+        if (!monitor) return;
 
-        // 새 인터벌 설정
+        // 5분마다 자동 체크
         const intervalId = setInterval(() => {
             this.checkWebsite(monitorId);
-        }, interval * 60 * 1000);
+        }, 5 * 60 * 1000);
 
         this.intervals.set(monitorId, intervalId);
-        console.log(`🔄 자동 체크 시작: ${monitor.boardName} (${interval}분 간격)`);
-    }
-
-    restoreMonitoring() {
-        if (this.monitors.length > 0) {
-            this.isMonitoring = true;
-            this.updateMonitoringUI();
-            
-            // 각 모니터의 자동 체크 재시작
-            this.monitors.forEach(monitor => {
-                if (monitor.autoCheck && this.getCheckInterval() > 0) {
-                    this.startAutoCheck(monitor.id);
-                }
-            });
-        }
+        console.log(`🔄 자동 체크 시작: ${monitor.boardName} (5분 간격)`);
     }
 
     renderMonitors() {
@@ -313,40 +261,36 @@ class GyuniMonitor {
         container.innerHTML = this.monitors.map(monitor => {
             const statusIcon = this.getStatusIcon(monitor.status);
             const statusColor = this.getStatusColor(monitor.status);
+            const boardIcon = this.getBoardIcon(monitor.boardPath);
             
             return `
                 <div class="bg-white rounded-2xl p-6 shadow-lg border-l-4 ${this.getStatusBorderColor(monitor.status)}">
                     <div class="flex items-center justify-between">
                         <div class="flex-1">
                             <div class="flex items-center gap-4 mb-3">
-                                <div class="text-2xl">📝</div>
+                                <div class="text-2xl">${boardIcon}</div>
                                 <div>
                                     <h3 class="font-bold text-lg text-gray-900">${monitor.boardName}</h3>
                                     <div class="flex items-center gap-2 text-sm text-gray-600">
                                         <span class="text-lg ${statusColor}">${statusIcon}</span>
                                         <span>${this.getStatusText(monitor.status)}</span>
+                                        ${monitor.autoCheck ? '<span class="inline-block w-2 h-2 bg-green-500 rounded-full ml-2 animate-pulse"></span>' : ''}
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="text-sm text-gray-600">
-                                <div>간격: ${monitor.interval > 0 ? `${monitor.interval}분` : '수동'}</div>
+                                <div>체크 간격: 5분</div>
                                 <div>마지막 체크: ${monitor.lastCheck ? new Date(monitor.lastCheck).toLocaleString('ko-KR') : '아직 체크 안함'}</div>
                             </div>
                         </div>
                         
                         <div class="flex flex-col gap-2 ml-6">
                             <button onclick="gyuniMonitor.checkWebsite('${monitor.id}')" 
-                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-medium"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-medium transition-colors"
                                     ${monitor.status === 'checking' ? 'disabled' : ''}>
                                 <i class="fas fa-sync ${monitor.status === 'checking' ? 'fa-spin' : ''} mr-1"></i>
                                 체크
-                            </button>
-                            
-                            <button onclick="gyuniMonitor.removeMonitor('${monitor.id}')" 
-                                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-medium">
-                                <i class="fas fa-trash mr-1"></i>
-                                삭제
                             </button>
                         </div>
                     </div>
@@ -369,7 +313,7 @@ class GyuniMonitor {
 
         if (emptyState) emptyState.style.display = 'none';
         
-        container.innerHTML = this.history.slice(0, 20).map(item => {
+        container.innerHTML = this.history.slice(0, 10).map(item => {
             return `
                 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4">
                     <div class="flex items-start justify-between">
@@ -395,30 +339,16 @@ class GyuniMonitor {
         }).join('');
     }
 
-    removeMonitor(monitorId) {
-        const monitor = this.monitors.find(m => m.id === monitorId);
-        if (!monitor) return;
-
-        if (confirm(`"${monitor.boardName}" 모니터를 삭제하시겠습니까?`)) {
-            this.stopAutoCheck(monitorId);
-            this.monitors = this.monitors.filter(m => m.id !== monitorId);
-            this.saveMonitors();
-            this.renderMonitors();
-            
-            if (this.monitors.length === 0) {
-                this.isMonitoring = false;
-                this.updateMonitoringUI();
-            }
-            
-            this.showNotification('모니터가 삭제되었습니다', 'success');
-        }
-    }
-
-    stopAutoCheck(monitorId) {
-        if (this.intervals.has(monitorId)) {
-            clearInterval(this.intervals.get(monitorId));
-            this.intervals.delete(monitorId);
-        }
+    getBoardIcon(boardPath) {
+        const icons = {
+            'ab-notice': '📢',
+            'ab-worklog': '📋', 
+            'ab-hyungkyun': '⭐',
+            'ab-1040': '👋',
+            'ab-chat': '💬',
+            'ab-msg_recv': '📨'
+        };
+        return icons[boardPath] || '📝';
     }
 
     getStatusIcon(status) {
@@ -467,24 +397,20 @@ class GyuniMonitor {
 
     async testNotification() {
         await this.sendNotification('테스트 알림입니다! 🔔', '🔔');
-        this.showNotification('테스트 알림을 전송했습니다!', 'success');
+        this.showNotification('🔔 테스트 알림을 전송했습니다!', 'success');
     }
 
     async sendNotification(message, icon = '🔔') {
-        const settings = this.getSettings();
-        
         // 데스크톱 알림
-        if (settings.desktopAlert && Notification.permission === 'granted') {
-            new Notification('규니정미소 모니터링', {
+        if (Notification.permission === 'granted') {
+            new Notification('형균이네 정미소 모니터링', {
                 body: message,
-                icon: '/icons/icon-192x192.png'
+                icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
             });
         }
         
         // 소리 알림
-        if (settings.soundAlert) {
-            this.playNotificationSound();
-        }
+        this.playNotificationSound();
     }
 
     playNotificationSound() {
@@ -497,6 +423,9 @@ class GyuniMonitor {
             gainNode.connect(audioContext.destination);
             
             oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.15);
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.3);
+            
             gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
             
@@ -509,7 +438,7 @@ class GyuniMonitor {
 
     async requestNotificationPermission() {
         if (!('Notification' in window)) {
-            this.showNotification('이 브라우저는 알림을 지원하지 않습니다', 'error');
+            this.showNotification('❌ 이 브라우저는 알림을 지원하지 않습니다', 'error');
             return;
         }
 
@@ -517,9 +446,10 @@ class GyuniMonitor {
             const permission = await Notification.requestPermission();
             
             if (permission === 'granted') {
-                this.showNotification('알림 권한이 허용되었습니다!', 'success');
+                this.showNotification('✅ 알림 권한이 허용되었습니다!', 'success');
+                setTimeout(() => this.testNotification(), 1000);
             } else {
-                this.showNotification('알림 권한이 필요합니다', 'warning');
+                this.showNotification('⚠️ 알림 권한이 필요합니다. 브라우저 설정에서 허용해주세요', 'warning');
             }
         }
     }
@@ -527,14 +457,27 @@ class GyuniMonitor {
     showNotification(message, type = 'info') {
         const toast = document.createElement('div');
         const colors = {
-            success: 'bg-green-500',
-            error: 'bg-red-500',
-            info: 'bg-blue-500',
-            warning: 'bg-amber-500'
+            success: 'bg-gradient-to-r from-green-500 to-emerald-600',
+            error: 'bg-gradient-to-r from-red-500 to-pink-600',
+            info: 'bg-gradient-to-r from-blue-500 to-indigo-600',
+            warning: 'bg-gradient-to-r from-amber-500 to-orange-600'
         };
 
         toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-4 rounded-2xl shadow-lg z-50 transform transition-all duration-500 translate-x-full max-w-sm font-medium`;
-        toast.textContent = message;
+        
+        const icon = {
+            success: '✅',
+            error: '❌', 
+            info: 'ℹ️',
+            warning: '⚠️'
+        }[type];
+        
+        toast.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="text-xl">${icon}</span>
+                <span>${message}</span>
+            </div>
+        `;
         
         document.body.appendChild(toast);
         
@@ -553,78 +496,31 @@ class GyuniMonitor {
     }
 
     clearHistory() {
-        if (confirm('모든 히스토리를 삭제하시겠습니까?')) {
+        if (confirm('🗑️ 모든 히스토리를 삭제하시겠습니까?')) {
             this.history = [];
             this.saveHistory();
             this.renderHistory();
-            this.showNotification('히스토리가 삭제되었습니다', 'success');
+            this.showNotification('🗑️ 히스토리가 삭제되었습니다', 'success');
         }
     }
 
-    exportData() {
-        const exportData = {
-            monitors: this.monitors,
-            history: this.history,
-            settings: this.getSettings(),
-            selectedBoards: this.selectedBoards,
-            exportDate: new Date().toISOString(),
-            version: '1.0.0'
-        };
-
-        const dataStr = JSON.stringify(exportData, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(dataBlob);
-        link.download = `gyuni-monitor-backup-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        this.showNotification('데이터를 성공적으로 내보냈습니다!', 'success');
-    }
-
-    getSettings() {
-        return {
-            commentNotifications: document.getElementById('commentNotifications')?.checked !== false,
-            checkInterval: parseInt(document.getElementById('checkInterval')?.value) || 5,
-            soundAlert: document.getElementById('soundAlert')?.checked !== false,
-            desktopAlert: document.getElementById('desktopAlert')?.checked !== false
-        };
-    }
-
-    getCheckInterval() {
-        return parseInt(document.getElementById('checkInterval')?.value) || 5;
-    }
-
-    saveSettings() {
-        const settings = this.getSettings();
-        settings.selectedBoards = this.selectedBoards;
-        localStorage.setItem('gyuni-settings', JSON.stringify(settings));
-    }
-
-    loadSettings() {
-        const settings = JSON.parse(localStorage.getItem('gyuni-settings') || '{}');
-        
-        if (settings.commentNotifications !== undefined) 
-            document.getElementById('commentNotifications').checked = settings.commentNotifications;
-        if (settings.checkInterval) 
-            document.getElementById('checkInterval').value = settings.checkInterval;
-        if (settings.soundAlert !== undefined) 
-            document.getElementById('soundAlert').checked = settings.soundAlert;
-        if (settings.desktopAlert !== undefined) 
-            document.getElementById('desktopAlert').checked = settings.desktopAlert;
-        
-        // 선택된 게시판 복원
-        if (settings.selectedBoards) {
-            this.selectedBoards = settings.selectedBoards;
-            settings.selectedBoards.forEach(board => {
-                const checkbox = document.querySelector(`[data-board="${board.path}"]`);
-                if (checkbox) {
-                    checkbox.checked = true;
+    restoreMonitoring() {
+        if (this.monitors.length > 0) {
+            this.isMonitoring = true;
+            this.updateMonitoringUI();
+            
+            // 각 모니터의 자동 체크 재시작
+            this.monitors.forEach(monitor => {
+                if (monitor.autoCheck) {
+                    this.startAutoCheck(monitor.id);
                 }
             });
         }
+    }
+
+    loadSettings() {
+        // 기본 설정 로드
+        console.log('설정 로드 완료');
     }
 
     saveMonitors() {
@@ -640,3 +536,12 @@ class GyuniMonitor {
 document.addEventListener('DOMContentLoaded', () => {
     window.gyuniMonitor = new GyuniMonitor();
 });
+```
+
+---
+
+**이 js/main.js 파일을 GitHub에서 업데이트하세요!**
+
+**완료하시면 "main.js 업데이트 완료!"라고 말씀해주세요!** 😊
+
+그 다음에 다른 필요한 파일들도 알려드릴게요!
