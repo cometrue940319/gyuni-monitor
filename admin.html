@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>규니정미소 관리자</title>
     
-    <!-- PWA Meta Tags -->
-    <meta name="application-name" content="규니정미소 관리자">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="규니관리자">
-    <meta name="description" content="규니정미소 관리자 대시보드">
-    <meta name="theme-color" content="#dc2626">
-    
     <!-- CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
@@ -176,64 +168,112 @@
         
         .board-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px;
-            margin-bottom: 20px;
         }
         
-        .board-admin-card {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            border: 2px solid #e2e8f0;
+        .board-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
             border-radius: 15px;
             padding: 20px;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: visible;
         }
         
-        .board-admin-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.1);
-            border-color: #dc2626;
+        .board-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(220, 38, 38, 0.15);
         }
         
-        .board-admin-header {
+        .board-card.selected {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border-color: #b91c1c;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+        
+        .board-header {
             display: flex;
-            justify-content: between;
             align-items: center;
-            margin-bottom: 15px;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
         
-        .board-admin-icon {
+        .board-icon {
             font-size: 24px;
             color: #dc2626;
-            margin-right: 15px;
         }
         
-        .board-admin-title {
+        .board-card.selected .board-icon {
+            color: #fbbf24;
+        }
+        
+        .check-icon {
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: #10b981;
+        }
+        
+        .board-card:hover .check-icon,
+        .board-card.selected .check-icon {
+            opacity: 1;
+            color: #10b981;
+        }
+        
+        .board-title {
             font-size: 18px;
             font-weight: bold;
-            color: #1f2937;
-            flex: 1;
+            margin-bottom: 5px;
         }
         
-        .board-admin-description {
-            color: #6b7280;
+        .board-description {
             font-size: 14px;
-            margin-bottom: 15px;
+            color: #6b7280;
+            margin-bottom: 10px;
         }
         
-        .board-admin-actions {
+        .board-card.selected .board-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .comment-alert-setting {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+        
+        .board-card.selected .comment-alert-setting {
+            display: block;
+        }
+        
+        .comment-checkbox {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .comment-checkbox input {
+            margin-right: 8px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 30px;
         }
         
         .btn {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 12px 24px;
+            margin: 0 10px 10px 0;
             border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
@@ -242,18 +282,17 @@
         .btn-primary {
             background: linear-gradient(135deg, #dc2626, #b91c1c);
             color: white;
-            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
         }
         
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
         }
         
-        .btn-secondary {
-            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-            color: #374151;
-            border: 1px solid #d1d5db;
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
         }
         
         .btn-warning {
@@ -264,106 +303,6 @@
         .btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            border: 1px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.1);
-        }
-        
-        .stat-number {
-            font-size: 32px;
-            font-weight: bold;
-            color: #dc2626;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #6b7280;
-            font-weight: 500;
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .form-card {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            border: 1px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 20px;
-        }
-        
-        .form-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .form-title i {
-            margin-right: 8px;
-            color: #dc2626;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #dc2626;
-            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
-        }
-        
-        .status-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .status-item {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-        
-        .status-item:hover {
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.1);
         }
         
         .empty-state {
@@ -396,8 +335,13 @@
                 font-size: 36px;
             }
             
-            .board-grid, .form-grid {
+            .board-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                display: block;
+                margin: 0 0 10px 0;
             }
             
             .user-controls {
@@ -412,6 +356,18 @@
         
         .hidden {
             display: none;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
     </style>
 </head>
@@ -455,226 +411,196 @@
             </div>
         </div>
 
-        <!-- 게시판 관리 -->
+        <!-- 댓글 알림 설정 -->
         <div class="card">
             <h2 class="section-title">
-                <i class="fas fa-clipboard-list"></i>
-                게시판 관리
+                <i class="fas fa-bell"></i>
+                댓글 알림 설정
             </h2>
+            <p style="text-align: center; color: #6b7280; margin-bottom: 30px;">
+                관리자가 모니터링할 게시판을 선택하여 댓글 알림을 받아보세요
+            </p>
             
             <div class="board-grid">
                 <!-- 첫인사게시판(등업) -->
-                <div class="board-admin-card">
-                    <div class="board-admin-header">
-                        <i class="board-admin-icon fas fa-handshake"></i>
-                        <div class="board-admin-title">첫인사게시판(등업)</div>
+                <label class="board-card">
+                    <input type="checkbox" class="board-checkbox sr-only" data-board="greeting-upgrade" data-name="첫인사게시판(등업)">
+                    <div class="board-header">
+                        <div class="board-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="check-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
-                    <div class="board-admin-description">
-                        신규 회원들의 첫인사 글 관리 및 등업 승인
+                    <div class="board-title">👋 첫인사게시판(등업)</div>
+                    <div class="board-description">신규 회원들의 첫인사 및 등업 요청</div>
+                    
+                    <!-- 댓글 알림 설정 -->
+                    <div class="comment-alert-setting">
+                        <label class="comment-checkbox">
+                            <input type="checkbox" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <div class="board-admin-actions">
-                        <button class="btn btn-primary">신규 글 확인</button>
-                        <button class="btn btn-success">등업 승인</button>
-                        <button class="btn btn-secondary">관리</button>
-                    </div>
-                </div>
+                </label>
 
                 <!-- Gyuni Live 승인 신청 -->
-                <div class="board-admin-card">
-                    <div class="board-admin-header">
-                        <i class="board-admin-icon fas fa-video"></i>
-                        <div class="board-admin-title">Gyuni Live 승인 신청</div>
+                <label class="board-card">
+                    <input type="checkbox" class="board-checkbox sr-only" data-board="gyuni-live" data-name="Gyuni Live 승인 신청">
+                    <div class="board-header">
+                        <div class="board-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="check-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
-                    <div class="board-admin-description">
-                        라이브 스트리밍 신청서 검토 및 승인 처리
+                    <div class="board-title">📹 Gyuni Live 승인 신청</div>
+                    <div class="board-description">라이브 스트리밍 승인 요청 및 신청서</div>
+                    
+                    <!-- 댓글 알림 설정 -->
+                    <div class="comment-alert-setting">
+                        <label class="comment-checkbox">
+                            <input type="checkbox" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <div class="board-admin-actions">
-                        <button class="btn btn-warning">대기 중 (3)</button>
-                        <button class="btn btn-success">승인</button>
-                        <button class="btn btn-danger">거부</button>
-                    </div>
-                </div>
+                </label>
 
-                <!-- 댓글 신고 관리 -->
-                <div class="board-admin-card">
-                    <div class="board-admin-header">
-                        <i class="board-admin-icon fas fa-flag"></i>
-                        <div class="board-admin-title">댓글 신고 관리</div>
+                <!-- 공지사항 -->
+                <label class="board-card">
+                    <input type="checkbox" class="board-checkbox sr-only" data-board="notice" data-name="공지사항">
+                    <div class="board-header">
+                        <div class="board-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="check-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
-                    <div class="board-admin-description">
-                        신고된 댓글 검토 및 조치 처리
+                    <div class="board-title">📢 공지사항</div>
+                    <div class="board-description">중요한 공지와 업데이트</div>
+                    
+                    <!-- 댓글 알림 설정 -->
+                    <div class="comment-alert-setting">
+                        <label class="comment-checkbox">
+                            <input type="checkbox" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <div class="board-admin-actions">
-                        <button class="btn btn-warning">신고 (2)</button>
-                        <button class="btn btn-danger">삭제</button>
-                        <button class="btn btn-secondary">경고</button>
-                    </div>
-                </div>
+                </label>
 
-                <!-- 사용자 관리 -->
-                <div class="board-admin-card">
-                    <div class="board-admin-header">
-                        <i class="board-admin-icon fas fa-users-cog"></i>
-                        <div class="board-admin-title">사용자 관리</div>
+                <!-- 자유게시판 -->
+                <label class="board-card">
+                    <input type="checkbox" class="board-checkbox sr-only" data-board="free" data-name="자유게시판">
+                    <div class="board-header">
+                        <div class="board-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="check-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
-                    <div class="board-admin-description">
-                        회원 정보 관리, 권한 설정, 제재 조치
+                    <div class="board-title">💬 자유게시판</div>
+                    <div class="board-description">자유로운 소통과 대화</div>
+                    
+                    <!-- 댓글 알림 설정 -->
+                    <div class="comment-alert-setting">
+                        <label class="comment-checkbox">
+                            <input type="checkbox" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <div class="board-admin-actions">
-                        <button class="btn btn-primary">회원 목록</button>
-                        <button class="btn btn-warning">제재 관리</button>
-                        <button class="btn btn-secondary">권한 설정</button>
-                    </div>
-                </div>
+                </label>
 
-                <!-- 게시글 관리 -->
-                <div class="board-admin-card">
-                    <div class="board-admin-header">
-                        <i class="board-admin-icon fas fa-edit"></i>
-                        <div class="board-admin-title">게시글 관리</div>
+                <!-- 질문/답변 -->
+                <label class="board-card">
+                    <input type="checkbox" class="board-checkbox sr-only" data-board="qna" data-name="질문/답변">
+                    <div class="board-header">
+                        <div class="board-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="check-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
-                    <div class="board-admin-description">
-                        전체 게시글 검토, 수정, 삭제 및 공지 관리
+                    <div class="board-title">❓ 질문/답변</div>
+                    <div class="board-description">궁금한 점과 답변 공유</div>
+                    
+                    <!-- 댓글 알림 설정 -->
+                    <div class="comment-alert-setting">
+                        <label class="comment-checkbox">
+                            <input type="checkbox" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <div class="board-admin-actions">
-                        <button class="btn btn-primary">최근 글</button>
-                        <button class="btn btn-success">공지 등록</button>
-                        <button class="btn btn-danger">일괄 삭제</button>
-                    </div>
-                </div>
+                </label>
 
-                <!-- 모니터링 로그 -->
-                <div class="board-admin-card">
-                    <div class="board-admin-header">
-                        <i class="board-admin-icon fas fa-chart-line"></i>
-                        <div class="board-admin-title">모니터링 로그</div>
+                <!-- 건의사항 -->
+                <label class="board-card">
+                    <input type="checkbox" class="board-checkbox sr-only" data-board="suggestion" data-name="건의사항">
+                    <div class="board-header">
+                        <div class="board-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="check-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
-                    <div class="board-admin-description">
-                        시스템 활동 로그 및 사용자 접속 기록
+                    <div class="board-title">💡 건의사항</div>
+                    <div class="board-description">사이트 개선 제안 및 건의</div>
+                    
+                    <!-- 댓글 알림 설정 -->
+                    <div class="comment-alert-setting">
+                        <label class="comment-checkbox">
+                            <input type="checkbox" checked>
+                            새 댓글 알림 받기
+                        </label>
                     </div>
-                    <div class="board-admin-actions">
-                        <button class="btn btn-primary">로그 보기</button>
-                        <button class="btn btn-warning">통계</button>
-                        <button class="btn btn-secondary">내보내기</button>
-                    </div>
-                </div>
+                </label>
+            </div>
+
+            <!-- 컨트롤 버튼 -->
+            <div class="controls">
+                <button id="saveSettingsBtn" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 설정 저장
+                </button>
+                <button id="testNotificationBtn" class="btn btn-warning">
+                    <i class="fas fa-bell"></i> 알림 테스트
+                </button>
+                <button id="resetSettingsBtn" class="btn btn-danger">
+                    <i class="fas fa-undo"></i> 설정 초기화
+                </button>
             </div>
         </div>
 
-        <!-- 시스템 통계 -->
+        <!-- 활성 모니터링 -->
         <div class="card">
             <h2 class="section-title">
-                <i class="fas fa-chart-bar"></i>
-                시스템 통계
+                <i class="fas fa-list"></i>
+                활성 댓글 모니터링
             </h2>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div id="totalUsers" class="stat-number">127</div>
-                    <div class="stat-label">총 회원수</div>
-                </div>
-                <div class="stat-card">
-                    <div id="activeUsers" class="stat-number">89</div>
-                    <div class="stat-label">활성 회원</div>
-                </div>
-                <div class="stat-card">
-                    <div id="totalPosts" class="stat-number">1,234</div>
-                    <div class="stat-label">총 게시글</div>
-                </div>
-                <div class="stat-card">
-                    <div id="todayPosts" class="stat-number">23</div>
-                    <div class="stat-label">오늘 게시글</div>
-                </div>
-                <div class="stat-card">
-                    <div id="pendingApprovals" class="stat-number">5</div>
-                    <div class="stat-label">승인 대기</div>
-                </div>
-                <div class="stat-card">
-                    <div id="reportedContent" class="stat-number">2</div>
-                    <div class="stat-label">신고 접수</div>
+            <div id="monitorList">
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h3>아직 모니터링 중인 게시판이 없습니다</h3>
+                    <p>위에서 게시판을 선택하고 "설정 저장" 버튼을 클릭하세요</p>
                 </div>
             </div>
         </div>
 
-        <!-- 관리 도구 -->
-        <div class="card">
-            <h2 class="section-title">
-                <i class="fas fa-tools"></i>
-                관리 도구
-            </h2>
-            
-            <div class="form-grid">
-                <div class="form-card">
-                    <div class="form-title">
-                        <i class="fas fa-bullhorn"></i>
-                        전체 공지사항 발송
-                    </div>
-                    <form id="noticeForm">
-                        <input type="text" class="form-control" placeholder="공지사항 제목" required>
-                        <textarea class="form-control" placeholder="공지사항 내용" rows="3" required></textarea>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-paper-plane"></i> 공지사항 발송
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="form-card">
-                    <div class="form-title">
-                        <i class="fas fa-database"></i>
-                        시스템 관리
-                    </div>
-                    <button class="btn btn-warning" style="width: 100%; margin-bottom: 10px;">
-                        <i class="fas fa-sync"></i> 캐시 초기화
-                    </button>
-                    <button class="btn btn-success" style="width: 100%; margin-bottom: 10px;">
-                        <i class="fas fa-download"></i> 데이터 백업
-                    </button>
-                    <button class="btn btn-danger" style="width: 100%;">
-                        <i class="fas fa-trash"></i> 임시 파일 정리
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 최근 활동 -->
+        <!-- 댓글 알림 히스토리 -->
         <div class="card">
             <h2 class="section-title">
                 <i class="fas fa-history"></i>
-                최근 활동 로그
+                댓글 알림 히스토리
             </h2>
-            
-            <div id="activityList" class="status-list">
-                <div class="status-item">
-                    <div style="display: flex; justify-content: between; align-items: center;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; margin-bottom: 5px;">새로운 첫인사 게시글</div>
-                            <div style="font-size: 14px; color: #6b7280;">홍길동님이 첫인사를 작성했습니다.</div>
-                            <div style="font-size: 12px; color: #9ca3af; margin-top: 5px;">5분 전</div>
-                        </div>
-                        <button class="btn btn-primary">확인</button>
-                    </div>
-                </div>
-                
-                <div class="status-item">
-                    <div style="display: flex; justify-content: between; align-items: center;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; margin-bottom: 5px;">Gyuni Live 신청</div>
-                            <div style="font-size: 14px; color: #6b7280;">김철수님이 라이브 승인을 신청했습니다.</div>
-                            <div style="font-size: 12px; color: #9ca3af; margin-top: 5px;">15분 전</div>
-                        </div>
-                        <button class="btn btn-warning">검토</button>
-                    </div>
-                </div>
-                
-                <div class="status-item">
-                    <div style="display: flex; justify-content: between; align-items: center;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; margin-bottom: 5px;">댓글 신고 접수</div>
-                            <div style="font-size: 14px; color: #6b7280;">부적절한 댓글이 신고되었습니다.</div>
-                            <div style="font-size: 12px; color: #9ca3af; margin-top: 5px;">1시간 전</div>
-                        </div>
-                        <button class="btn btn-danger">처리</button>
-                    </div>
+            <div id="historyList">
+                <div class="empty-state">
+                    <i class="fas fa-clock"></i>
+                    <h3>아직 댓글 알림 기록이 없습니다</h3>
+                    <p>게시판 모니터링이 시작되면 여기에 댓글 알림 기록이 표시됩니다</p>
                 </div>
             </div>
         </div>
@@ -685,9 +611,6 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
-    <script src="js/admin.js"></script>
-    
     <script>
         // 페이지 로드 시 관리자 로그인 확인
         document.addEventListener('DOMContentLoaded', function() {
@@ -698,7 +621,8 @@
                 return;
             }
             
-            console.log('관리자 대시보드 로드 완료');
+            console.log('관리자 댓글 모니터링 대시보드 로드 완료');
+            loadSettings();
         });
 
         // 로그아웃 기능
@@ -710,10 +634,112 @@
             }
         });
 
-        // 공지사항 발송
-        document.getElementById('noticeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('공지사항이 발송되었습니다!');
+        // 게시판 선택 이벤트
+        document.querySelectorAll('.board-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const card = e.target.closest('.board-card');
+                if (e.target.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        });
+
+        // 설정 저장
+        document.getElementById('saveSettingsBtn').addEventListener('click', function() {
+            const selectedBoards = [];
+            document.querySelectorAll('.board-checkbox:checked').forEach(checkbox => {
+                const boardName = checkbox.dataset.name;
+                const commentAlert = checkbox.closest('.board-card').querySelector('.comment-checkbox input').checked;
+                selectedBoards.push({
+                    board: checkbox.dataset.board,
+                    name: boardName,
+                    commentAlert: commentAlert
+                });
+            });
+            
+            localStorage.setItem('admin_comment_settings', JSON.stringify(selectedBoards));
+            alert('댓글 알림 설정이 저장되었습니다!');
+            updateMonitorList();
+        });
+
+        // 설정 불러오기
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('admin_comment_settings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                settings.forEach(setting => {
+                    const checkbox = document.querySelector(`[data-board="${setting.board}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        checkbox.closest('.board-card').classList.add('selected');
+                        
+                        const commentCheckbox = checkbox.closest('.board-card').querySelector('.comment-checkbox input');
+                        if (commentCheckbox) {
+                            commentCheckbox.checked = setting.commentAlert;
+                        }
+                    }
+                });
+                updateMonitorList();
+            }
+        }
+
+        // 모니터링 목록 업데이트
+        function updateMonitorList() {
+            const monitorList = document.getElementById('monitorList');
+            const selectedBoards = [];
+            
+            document.querySelectorAll('.board-checkbox:checked').forEach(checkbox => {
+                const boardName = checkbox.dataset.name;
+                const commentAlert = checkbox.closest('.board-card').querySelector('.comment-checkbox input').checked;
+                selectedBoards.push({
+                    name: boardName,
+                    commentAlert: commentAlert
+                });
+            });
+            
+            if (selectedBoards.length === 0) {
+                monitorList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>아직 모니터링 중인 게시판이 없습니다</h3>
+                        <p>위에서 게시판을 선택하고 "설정 저장" 버튼을 클릭하세요</p>
+                    </div>
+                `;
+            } else {
+                monitorList.innerHTML = selectedBoards.map(board => `
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 5px;">${board.name}</div>
+                                <div style="font-size: 12px; color: #6b7280;">
+                                    ${board.commentAlert ? '✅ 댓글 알림 활성화' : '❌ 댓글 알림 비활성화'}
+                                </div>
+                            </div>
+                            <div style="color: #10b981; font-size: 14px; font-weight: 500;">모니터링 중</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 알림 테스트
+        document.getElementById('testNotificationBtn').addEventListener('click', function() {
+            alert('테스트 댓글 알림입니다!\n\n📹 Gyuni Live 승인 신청 게시판에\n새로운 댓글이 작성되었습니다.');
+        });
+
+        // 설정 초기화
+        document.getElementById('resetSettingsBtn').addEventListener('click', function() {
+            if (confirm('모든 댓글 알림 설정을 초기화하시겠습니까?')) {
+                localStorage.removeItem('admin_comment_settings');
+                document.querySelectorAll('.board-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.closest('.board-card').classList.remove('selected');
+                });
+                updateMonitorList();
+                alert('설정이 초기화되었습니다.');
+            }
         });
     </script>
 </body>
