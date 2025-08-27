@@ -220,6 +220,21 @@
             margin-right: 6px;
         }
         
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border: 1px solid #10b981;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #065f46;
+            display: none;
+        }
+        
+        .success-message i {
+            margin-right: 6px;
+        }
+        
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -262,7 +277,12 @@
 
             <div class="password-hint">
                 <i class="fas fa-info-circle"></i>
-                관리자 비밀번호를 입력하세요
+                관리자 비밀번호를 입력하세요 (비밀번호: 1025)
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">로그인 성공! 관리자 대시보드로 이동합니다...</span>
             </div>
 
             <div class="error-message" id="errorMessage">
@@ -314,32 +334,52 @@
 
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
             const errorText = document.getElementById('errorText');
             
+            successDiv.style.display = 'none';
             errorText.textContent = message;
             errorDiv.style.display = 'block';
             
-            // 3초 후 에러 메시지 숨김
             setTimeout(() => {
                 errorDiv.style.display = 'none';
             }, 3000);
         }
 
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            
+            errorDiv.style.display = 'none';
+            successText.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('로그인 폼 제출됨');
             
             const password = document.getElementById('password').value;
+            console.log('입력된 비밀번호:', password);
             
+            // 간단한 비밀번호 체크
             if (password === '1025') {
+                console.log('비밀번호 일치!');
+                showSuccess('로그인 성공! 관리자 대시보드로 이동합니다...');
+                
                 // 로그인 성공
                 localStorage.setItem('admin_logged_in', 'true');
                 localStorage.setItem('admin_login_time', new Date().toISOString());
                 
-                // 관리자 대시보드로 리다이렉트
-                window.location.href = 'admin.html';
+                // 2초 후 관리자 대시보드로 이동
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 2000);
+                
             } else {
-                // 로그인 실패
-                showError('비밀번호가 올바르지 않습니다.');
+                console.log('비밀번호 불일치!');
+                showError('비밀번호가 올바르지 않습니다. (정답: 1025)');
                 document.getElementById('password').value = '';
                 document.getElementById('password').focus();
             }
@@ -347,8 +387,25 @@
 
         // 페이지 로드 시 이미 로그인된 경우 리다이렉트
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('페이지 로드됨');
+            
             if (localStorage.getItem('admin_logged_in') === 'true') {
+                console.log('이미 로그인된 상태');
                 window.location.href = 'admin.html';
+                return;
             }
             
-            // 비밀<span class="cursor">█</span>
+            // 비밀번호 입력란에 포커스
+            document.getElementById('password').focus();
+        });
+
+        // Enter 키로 로그인
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                console.log('Enter 키 눌림');
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
